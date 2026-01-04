@@ -2,11 +2,21 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import { Header } from '~/components/header'
 import { Button, ButtonText } from '~/components/ui/button'
+import {
+  calculatePlatformStats,
+  getCurrentMonthTrips,
+  getCurrentYearTrips,
+} from '~/utils/stats'
 import { TRIPSDTO } from '~/utils/TRIPS-DTO'
 import { EarningsChart } from './earnings-chart'
+import { PlatformDistribution } from './platform-distribution'
 import { StatsCard } from './stats-card'
 
 export default function Dashboard() {
+  const currentMonthTrips = getCurrentMonthTrips(TRIPSDTO)
+  const currentYearTrips = getCurrentYearTrips(TRIPSDTO)
+  const platformStats = calculatePlatformStats(currentMonthTrips)
+
   return (
     <View className="flex-1 py-16">
       <Header />
@@ -59,7 +69,8 @@ export default function Dashboard() {
             description={`Se mantiver média atual`}
             icon={'bar-chart'}
           />
-          <EarningsChart trips={TRIPSDTO} type="daily" />
+          <EarningsChart trips={currentYearTrips} type="daily" />
+          <PlatformDistribution stats={platformStats} />
         </View>
       </ScrollView>
     </View>
