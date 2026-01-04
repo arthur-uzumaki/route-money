@@ -1,0 +1,48 @@
+import type { Trip } from '~/app/(app)/(dashboard)/earnings-chart'
+
+export const TRIPSDTO: Trip[] = [
+  {
+    id: '1',
+    userId: '1',
+    platform: 'uber',
+    type: 'corrida',
+    date: '2026-01-01T10:00:00.000Z',
+    grossValue: 50,
+    fees: 10,
+    netValue: 40,
+    createdAt: '2026-01-01T10:30:00.000Z',
+  },
+  {
+    id: '2',
+    userId: '1',
+    platform: 'ifood',
+    type: 'entrega',
+    date: '2026-01-02T12:00:00.000Z',
+    grossValue: 70,
+    fees: 14,
+    netValue: 56,
+    createdAt: '2026-01-02T12:30:00.000Z',
+  },
+  {
+    id: '3',
+    userId: '1',
+    platform: 'uber',
+    type: 'corrida',
+    date: '2026-01-03T09:00:00.000Z',
+    grossValue: 40,
+    fees: 8,
+    netValue: 32,
+    createdAt: '2026-01-03T09:20:00.000Z',
+  },
+  {
+    id: '4',
+    userId: '1',
+    platform: '99',
+    type: 'corrida',
+    date: '2026-01-04T18:00:00.000Z',
+    grossValue: 90,
+    fees: 18,
+    netValue: 72,
+    createdAt: '2026-01-04T18:40:00.000Z',
+  },
+]

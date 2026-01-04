@@ -2,6 +2,8 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import { Header } from '~/components/header'
 import { Button, ButtonText } from '~/components/ui/button'
+import { TRIPSDTO } from '~/utils/TRIPS-DTO'
+import { EarningsChart } from './earnings-chart'
 import { StatsCard } from './stats-card'
 
 export default function Dashboard() {
@@ -26,7 +28,11 @@ export default function Dashboard() {
         </Button>
       </View>
 
-      <ScrollView className="mt-8" contentContainerClassName="pb-8">
+      <ScrollView
+        className="mt-8"
+        contentContainerClassName="pb-16"
+        showsVerticalScrollIndicator={false}
+      >
         <View className="gap-3 px-6">
           <StatsCard
             title="Ganho do Mês"
@@ -53,6 +59,7 @@ export default function Dashboard() {
             description={`Se mantiver média atual`}
             icon={'bar-chart'}
           />
+          <EarningsChart trips={TRIPSDTO} type="daily" />
         </View>
       </ScrollView>
     </View>
