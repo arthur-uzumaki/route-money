@@ -21,7 +21,7 @@ export function ProfileButton() {
       }}
     >
       {/* Perfil MenuItem */}
-      <MenuItem>
+      <MenuItem textValue="perfil">
         <Link href={'/'}>
           <HStack space="sm" className="items-center">
             <MaterialIcons name="settings" size={16} />
@@ -31,7 +31,7 @@ export function ProfileButton() {
       </MenuItem>
 
       {/* Sair MenuItem */}
-      <MenuItem>
+      <MenuItem textValue="sair">
         <HStack space="sm" className="items-center">
           <MaterialIcons name="logout" size={16} />
           <MenuItemLabel>Sair</MenuItemLabel>
