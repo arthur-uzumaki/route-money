@@ -2,6 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import { Header } from '~/components/header'
 import { Button, ButtonText } from '~/components/ui/button'
+import { formatCurrency, getDaysInMonth } from '~/lib/format'
 import {
   calculatePlatformStats,
   getCurrentMonthTrips,
@@ -16,6 +17,15 @@ export default function Dashboard() {
   const currentMonthTrips = getCurrentMonthTrips(TRIPSDTO)
   const currentYearTrips = getCurrentYearTrips(TRIPSDTO)
   const platformStats = calculatePlatformStats(currentMonthTrips)
+
+  const monthTotal = currentMonthTrips.reduce((sum, t) => sum + t.netValue, 0)
+  const yearTotal = currentYearTrips.reduce((sum, t) => sum + t.netValue, 0)
+
+  const now = new Date()
+  const daysInMonth = getDaysInMonth(now.getFullYear(), now.getMonth() + 1)
+  const currentDay = now.getDate()
+  const dailyAverage = currentDay > 0 ? monthTotal / currentDay : 0
+  const projectedMonth = dailyAverage * daysInMonth
 
   return (
     <View className="flex-1 py-16">
@@ -46,31 +56,33 @@ export default function Dashboard() {
         <View className="gap-3 px-6">
           <StatsCard
             title="Ganho do Mês"
-            value={'0'}
-            description={` corridas este mês`}
+            value={formatCurrency(monthTotal)}
+            description={`${currentMonthTrips.length} corridas este mês`}
             icon={'wallet'}
           />
 
           <StatsCard
             title="Ganho do Ano"
-            value={'0'}
-            description={` corridas este ano`}
+            value={formatCurrency(yearTotal)}
+            description={`${currentYearTrips.length} corridas este ano`}
             icon={'trending-up'}
           />
           <StatsCard
             title="Média Diária"
-            value={'0'}
+            value={formatCurrency(dailyAverage)}
             description="Baseado nos dias trabalhados"
             icon={'calendar-view-week'}
           />
           <StatsCard
             title="Projeção do Mês"
-            value={'0'}
+            value={formatCurrency(projectedMonth)}
             description={`Se mantiver média atual`}
             icon={'bar-chart'}
           />
           <EarningsChart trips={currentYearTrips} type="daily" />
           <PlatformDistribution stats={platformStats} />
+
+          <EarningsChart trips={currentMonthTrips} type="monthly" />
         </View>
       </ScrollView>
     </View>
