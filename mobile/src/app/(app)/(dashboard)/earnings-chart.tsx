@@ -1,5 +1,4 @@
 import { Text } from 'react-native'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 import { BarChart, LineChart } from 'react-native-gifted-charts'
 import { Card } from '~/components/ui/card'
 import { getDailyData, getMonthlyData } from '~/utils/trips'
