@@ -1,7 +1,8 @@
 import { Text } from 'react-native'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 import { BarChart, LineChart } from 'react-native-gifted-charts'
 import { Card } from '~/components/ui/card'
-import { getDailyData } from '~/utils/trips'
+import { getDailyData, getMonthlyData } from '~/utils/trips'
 
 export type Platform = 'uber' | 'ifood' | '99' | 'rappi' | 'outro'
 export type TripType = 'corrida' | 'entrega'
@@ -26,7 +27,7 @@ interface EarningsChartProps {
 }
 
 export function EarningsChart({ trips, type }: EarningsChartProps) {
-  const data = type === 'daily' ? getDailyData(trips) : []
+  const data = type === 'daily' ? getDailyData(trips) : getMonthlyData(trips)
 
   return (
     <Card className="overflow-hidden rounded-xl border border-border p-4">

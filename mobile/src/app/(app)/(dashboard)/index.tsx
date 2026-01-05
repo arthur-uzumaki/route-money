@@ -11,6 +11,7 @@ import {
 import { TRIPSDTO } from '~/utils/TRIPS-DTO'
 import { EarningsChart } from './earnings-chart'
 import { PlatformDistribution } from './platform-distribution'
+import { RecentTrips } from './recent-trips'
 import { StatsCard } from './stats-card'
 
 export default function Dashboard() {
@@ -83,6 +84,8 @@ export default function Dashboard() {
           <PlatformDistribution stats={platformStats} />
 
           <EarningsChart trips={currentMonthTrips} type="monthly" />
+
+          <RecentTrips trips={TRIPSDTO} />
         </View>
       </ScrollView>
     </View>

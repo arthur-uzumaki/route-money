@@ -36,3 +36,28 @@ export function getDailyData(trips: Trip[]) {
     value: Number(value.toFixed(2)),
   }))
 }
+
+export function getMonthlyData(trips: Trip[]) {
+  const map = new Map<string, number>()
+
+  trips.forEach(trip => {
+    const date = new Date(trip.date)
+    if (isNaN(date.getTime())) return
+
+    const key = `${date.getFullYear()}-${date.getMonth()}`
+    map.set(key, (map.get(key) || 0) + trip.netValue)
+  })
+
+  return Array.from(map.entries())
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .slice(-12)
+    .map(([key, value]) => {
+      const [year, month] = key.split('-')
+      const date = new Date(Number(year), Number(month))
+
+      return {
+        label: date.toLocaleDateString('pt-BR', { month: 'short' }),
+        value: Math.round(value * 100) / 100,
+      }
+    })
+}
