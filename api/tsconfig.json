@@ -1,7 +1,6 @@
 {
   "$schema": "https://www.schemastore.org/tsconfig",
   "_version": "24.0.0",
-
   "compilerOptions": {
     "lib": [
       "es2024",
@@ -12,11 +11,11 @@
     ],
     "module": "nodenext",
     "target": "es2024",
-
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }
