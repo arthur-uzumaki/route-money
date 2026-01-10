@@ -9,6 +9,7 @@
       "ESNext.Iterator",
       "ESNext.Promise"
     ],
+    "noEmit": true,
     "module": "nodenext",
     "target": "es2024",
     "strict": true,
@@ -16,6 +17,5 @@
     "skipLibCheck": true,
     "moduleResolution": "node16",
     "allowImportingTsExtensions": true,
-    "noEmit": true
   }
 }
