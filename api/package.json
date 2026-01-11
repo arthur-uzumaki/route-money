@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "dev \"Error: no test specified\" && exit 1"
+    "dev": "node --env-file=.env --watch src/http/server.ts",
+    "db:seed": "node --env-file=.env  src/db/seed.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +24,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
     "@fastify/jwt": "^10.0.0",
     "bcrypt": "^6.0.0",
     "drizzle-orm": "^0.45.1",

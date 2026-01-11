@@ -6,9 +6,9 @@ async function seed() {
   console.log('🌱 Iniciando seed do banco de dados...')
   const passwordHash = await hash('123456789', 8)
   try {
-    await db.delete(schema.rides)
-    await db.delete(schema.platform)
-    await db.delete(schema.user)
+    // await db.delete(schema.rides)
+    // await db.delete(schema.platform)
+    // await db.delete(schema.user)
 
     // 1. Criar usuários
     console.log('👥 Criando usuários...')

@@ -12,7 +12,7 @@ import {
 import { platform } from './platform.ts'
 import { user } from './user.ts'
 
-const ridesType = pgEnum('rides_type', ['corrida', 'entrega'])
+export const ridesType = pgEnum('rides_type', ['corrida', 'entrega'])
 
 export const rides = pgTable(
   'rides',
@@ -26,10 +26,10 @@ export const rides = pgTable(
     durationMinutes: integer(),
     notes: text(),
 
-    userId: text()
+    userId: uuid()
       .notNull()
       .references(() => user.id),
-    platformId: text()
+    platformId: uuid()
       .notNull()
       .references(() => platform.id),
 
