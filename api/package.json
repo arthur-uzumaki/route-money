@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "dev \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -20,9 +20,11 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@fastify/jwt": "^10.0.0",
     "bcrypt": "^6.0.0",
     "drizzle-orm": "^0.45.1",
     "fastify": "^5.6.2",
+    "fastify-plugin": "^5.1.0",
     "fastify-type-provider-zod": "^6.1.0",
     "pg": "^8.16.3",
     "zod": "^4.3.5"

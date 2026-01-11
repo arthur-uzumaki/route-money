@@ -31,10 +31,12 @@ export const registerRoute: FastifyPluginAsyncZod = async app => {
     async (request, reply) => {
       const { name, email, password } = request.body
 
-      const userExists = await db
+      const result = await db
         .select()
         .from(schema.user)
         .where(eq(schema.user.email, email))
+
+      const userExists = result[0]
 
       if (userExists) {
         return reply.status(409).send({ message: 'E-mail já cadastrado' })
