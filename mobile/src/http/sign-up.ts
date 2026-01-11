@@ -1,19 +1,19 @@
 import { useMutation } from '@tanstack/react-query'
 import { api } from '~/lib/api'
 
-interface SignUpPropsRequest {
+export interface SignUpRequest {
   name: string
   email: string
   password: string
 }
 
 // biome-ignore lint/suspicious/noConfusingVoidType: <Não tem retorno da api>
-type SignUpPropsResponse = void
+type SignUpResponse = void
 
-export async function signUp() {
+export function useSignUp() {
   return useMutation({
-    mutationFn: async ({ email, password, name }: SignUpPropsRequest) => {
-      const response = await api.post<SignUpPropsResponse>('/sessions', {
+    mutationFn: async ({ email, password, name }: SignUpRequest) => {
+      const response = await api.post<SignUpResponse>('/sessions', {
         name,
         email,
         password,

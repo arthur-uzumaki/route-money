@@ -11,8 +11,10 @@ api.interceptors.request.use(
     const token = await getToken()
 
     if (token) {
-      request.headers.Authorization = `${token}`
+      request.headers = request.headers ?? {}
+      request.headers.Authorization = `Bearer ${token}`
     }
+
     return request
   },
   error => Promise.reject(error)
