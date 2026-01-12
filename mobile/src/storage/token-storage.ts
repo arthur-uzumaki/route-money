@@ -14,11 +14,10 @@ async function saveToken(token: string) {
 async function getToken() {
   try {
     const storageToken = await AsyncStorage.getItem(TOKEN_STORAGE)
-    const token = storageToken ? JSON.parse(storageToken) : null
-    return token
-  } catch (error) {
-    // biome-ignore lint/complexity/noUselessCatch: <Lança pra frente>
-    throw error
+
+    return storageToken
+  } catch {
+    throw null
   }
 }
 

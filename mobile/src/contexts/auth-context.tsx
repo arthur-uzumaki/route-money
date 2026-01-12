@@ -33,7 +33,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error) {
       throw error
     } finally {
-      setIsLoggedIn(false)
     }
   }
 
@@ -47,25 +46,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   async function signOut() {
     try {
-      setIsLoggedIn(false)
       await removeToken()
+      setIsLoggedIn(false)
     } catch (error) {
       throw error
-    } finally {
-      setIsLoggedIn(false)
     }
   }
 
   useEffect(() => {
     async function loadToken() {
-      try {
-        const storedToken = await getToken()
-        setIsLoggedIn(!!storedToken)
-      } catch (error) {
-        console.log('Error get stored token')
-      } finally {
-        setIsReady(true)
-      }
+      const storedToken = await getToken()
+
+      console.log('Stored token:', storedToken)
+
+      setIsLoggedIn(!!storedToken)
+      setIsReady(true)
     }
 
     loadToken()

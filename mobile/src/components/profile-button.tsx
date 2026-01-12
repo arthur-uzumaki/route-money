@@ -1,11 +1,20 @@
 import { MaterialIcons } from '@expo/vector-icons'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
+import { useAuth } from '~/hooks/use-auth-hook'
 import { Avatar, AvatarFallbackText } from './ui/avatar'
 import { Button } from './ui/button'
 import { HStack } from './ui/hstack' // ou Box/View com flex
 import { Menu, MenuItem, MenuItemLabel } from './ui/menu'
 
 export function ProfileButton() {
+  const { signOut } = useAuth()
+  const route = useRouter()
+
+  async function handleSignOut() {
+    await signOut()
+    route.replace('/signin')
+  }
+
   return (
     <Menu
       placement="bottom right"
@@ -34,7 +43,7 @@ export function ProfileButton() {
       <MenuItem textValue="sair">
         <HStack space="sm" className="items-center">
           <MaterialIcons name="logout" size={16} />
-          <MenuItemLabel>Sair</MenuItemLabel>
+          <MenuItemLabel onPress={handleSignOut}>Sair</MenuItemLabel>
         </HStack>
       </MenuItem>
     </Menu>
