@@ -2,31 +2,20 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { ScrollView, View } from 'react-native'
 import { Header } from '~/components/header'
 import { Button, ButtonText } from '~/components/ui/button'
-import { formatCurrency, getDaysInMonth } from '~/lib/format'
-import {
-  calculatePlatformStats,
-  getCurrentMonthTrips,
-  getCurrentYearTrips,
-} from '~/utils/stats'
-import { TRIPSDTO } from '~/utils/TRIPS-DTO'
+import { getSummary } from '~/http/get-summary'
+import { formatCurrency } from '~/lib/format'
 import { EarningsChart } from './earnings-chart'
 import { PlatformDistribution } from './platform-distribution'
 import { RecentTrips } from './recent-trips'
 import { StatsCard } from './stats-card'
 
 export default function Dashboard() {
-  const currentMonthTrips = getCurrentMonthTrips(TRIPSDTO)
-  const currentYearTrips = getCurrentYearTrips(TRIPSDTO)
-  const platformStats = calculatePlatformStats(currentMonthTrips)
-
-  const monthTotal = currentMonthTrips.reduce((sum, t) => sum + t.netValue, 0)
-  const yearTotal = currentYearTrips.reduce((sum, t) => sum + t.netValue, 0)
-
   const now = new Date()
-  const daysInMonth = getDaysInMonth(now.getFullYear(), now.getMonth() + 1)
-  const currentDay = now.getDate()
-  const dailyAverage = currentDay > 0 ? monthTotal / currentDay : 0
-  const projectedMonth = dailyAverage * daysInMonth
+
+  const month = now.getMonth() + 1
+  const year = now.getFullYear()
+
+  const { data, isLoading } = getSummary({ month, year })
 
   return (
     <View className="flex-1 py-16">
@@ -54,38 +43,60 @@ export default function Dashboard() {
         contentContainerClassName="pb-16"
         showsVerticalScrollIndicator={false}
       >
+        {isLoading && <View />}
         <View className="gap-3 px-6">
-          <StatsCard
-            title="Ganho do Mês"
-            value={formatCurrency(monthTotal)}
-            description={`${currentMonthTrips.length} corridas este mês`}
-            icon={'wallet'}
-          />
+          {data && (
+            <>
+              <StatsCard
+                title="Ganho do Mês"
+                value={formatCurrency(data.monthTotal)}
+                description="Total no mês"
+                icon={'wallet'}
+              />
 
-          <StatsCard
-            title="Ganho do Ano"
-            value={formatCurrency(yearTotal)}
-            description={`${currentYearTrips.length} corridas este ano`}
-            icon={'trending-up'}
-          />
-          <StatsCard
-            title="Média Diária"
-            value={formatCurrency(dailyAverage)}
-            description="Baseado nos dias trabalhados"
-            icon={'calendar-view-week'}
-          />
-          <StatsCard
-            title="Projeção do Mês"
-            value={formatCurrency(projectedMonth)}
-            description={`Se mantiver média atual`}
-            icon={'bar-chart'}
-          />
-          <EarningsChart trips={currentYearTrips} type="daily" />
-          <PlatformDistribution stats={platformStats} />
+              <StatsCard
+                title="Ganho do Ano"
+                value={formatCurrency(data.yearTotal)}
+                description="Total no ano"
+                icon={'trending-up'}
+              />
+              <StatsCard
+                title="Média Diária"
+                value={formatCurrency(data.dailyAverage)}
+                description="Baseado nos dias trabalhados"
+                icon={'calendar-view-week'}
+              />
+              <StatsCard
+                title="Projeção do Mês"
+                value={formatCurrency(data.monthProjection)}
+                description={`Se mantiver média atual`}
+                icon={'bar-chart'}
+              />
+            </>
+          )}
 
-          <EarningsChart trips={currentMonthTrips} type="monthly" />
+          {data && (
+            <EarningsChart
+              type="daily"
+              data={data.earningsLast30Days.map(item => ({
+                label: item.date,
+                value: item.total,
+              }))}
+            />
+          )}
+          {data && <PlatformDistribution stats={data.earningsByPlatform} />}
 
-          <RecentTrips trips={TRIPSDTO} />
+          {data && (
+            <EarningsChart
+              type="monthly"
+              data={data.earningsLast12Months.map(item => ({
+                label: item.month,
+                value: item.total,
+              }))}
+            />
+          )}
+
+          {data && <RecentTrips trips={data.recentRides} />}
         </View>
       </ScrollView>
     </View>

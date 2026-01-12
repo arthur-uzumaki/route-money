@@ -66,8 +66,8 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
 
       const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0)
       const endOfMonth = new Date(year, month, 0, 23, 59, 59)
-      const startOfYear = new Date(year, 0, 1)
-      const endOfYear = new Date(year, 11, 31)
+      const startOfYear = new Date(year, 0, 1, 0, 0, 0)
+      const endOfYear = new Date(year, 11, 31, 23, 59, 59)
 
       const [
         [monthResult],
@@ -78,7 +78,7 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
         platformsResult,
         recentRides,
       ] = await Promise.all([
-        // 1️⃣ Ganho do mês
+        // 1️⃣ Ganho do mês ATUAL
         db
           .select({
             total: sql<number>`COALESCE(SUM(${schema.rides.netValue}), 0)`,
@@ -93,7 +93,7 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
             )
           ),
 
-        // 2️⃣ Ganho do ano
+        // 2️⃣ Ganho do ANO INTEIRO (todos os meses do ano)
         db
           .select({
             total: sql<number>`COALESCE(SUM(${schema.rides.netValue}), 0)`,
@@ -121,7 +121,7 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
             )
           ),
 
-        // 5️⃣ Últimos 30 dias
+        // 4️⃣ Últimos 30 dias
         db
           .select({
             date: schema.rides.rideDate,
@@ -140,7 +140,7 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
           .groupBy(schema.rides.rideDate)
           .orderBy(schema.rides.rideDate),
 
-        // 6️⃣ Últimos 12 meses
+        // 5️⃣ Últimos 12 meses
         db.execute<{
           month: string
           total: number
@@ -155,7 +155,7 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
           ORDER BY month
         `),
 
-        // 7️⃣ Distribuição por plataforma
+        // 6️⃣ Distribuição por plataforma (do ano inteiro)
         db
           .select({
             name: schema.platform.name,
@@ -166,10 +166,16 @@ export const getReportsSummaryRoute: FastifyPluginAsyncZod = async app => {
             schema.platform,
             eq(schema.platform.id, schema.rides.platformId)
           )
-          .where(eq(schema.rides.userId, userId))
+          .where(
+            and(
+              eq(schema.rides.userId, userId),
+              gte(schema.rides.rideDate, startOfYear),
+              lte(schema.rides.rideDate, endOfYear)
+            )
+          )
           .groupBy(schema.platform.name),
 
-        // 8️⃣ Corridas recentes
+        // 7️⃣ Corridas recentes
         db
           .select({
             id: schema.rides.id,

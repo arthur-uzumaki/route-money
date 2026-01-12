@@ -7,10 +7,8 @@ import { getPlatformBgColor, getPlatformName } from '~/lib/platform-config'
 export type Platform = 'uber' | 'ifood' | '99' | 'rappi' | 'outro'
 
 export interface PlatformStats {
-  platform: Platform
-  totalGross: number
-  totalNet: number
-  tripCount: number
+  platform: string
+  total: number
   percentage: number
 }
 
@@ -19,8 +17,6 @@ interface PlatformDistributionProps {
 }
 
 export function PlatformDistribution({ stats }: PlatformDistributionProps) {
-  const total = stats.reduce((sum, s) => sum + s.totalNet, 0)
-
   return (
     <Card className="rounded-xl border border-border p-4">
       <Text className="font-bold text-foreground text-lg">
@@ -37,39 +33,25 @@ export function PlatformDistribution({ stats }: PlatformDistributionProps) {
         </Text>
       ) : (
         <View className="gap-4">
-          {stats.map(stat => {
-            const percentage = total > 0 ? (stat.totalNet / total) * 100 : 0
+          {stats.map(stat => (
+            <View key={stat.platform} className="gap-2">
+              <View className="flex-row items-center justify-between">
+                <Text className="font-medium text-foreground text-sm">
+                  {getPlatformName(stat.platform as Platform)}
+                </Text>
 
-            return (
-              <View key={stat.platform} className="gap-2">
-                <View className="flex-row items-center justify-between">
-                  <Text className="font-medium text-foreground text-sm">
-                    {getPlatformName(stat.platform)}
-                  </Text>
-
-                  <Text className="text-muted-foreground text-xs">
-                    {formatCurrency(stat.totalNet)} ({percentage.toFixed(1)}%)
-                  </Text>
-                </View>
-
-                <Progress size="sm" value={percentage}>
-                  <ProgressFilledTrack
-                    className={getPlatformBgColor(stat.platform)}
-                  />
-                </Progress>
-
-                <View className="flex-row justify-between">
-                  <Text className="text-muted-foreground text-xs">
-                    {stat.tripCount} corridas
-                  </Text>
-
-                  <Text className="text-muted-foreground text-xs">
-                    Média: {formatCurrency(stat.totalNet / stat.tripCount || 0)}
-                  </Text>
-                </View>
+                <Text className="text-muted-foreground text-xs">
+                  {formatCurrency(stat.total)} ({stat.percentage.toFixed(1)}%)
+                </Text>
               </View>
-            )
-          })}
+
+              <Progress size="sm" value={stat.percentage}>
+                <ProgressFilledTrack
+                  className={getPlatformBgColor(stat.platform as Platform)}
+                />
+              </Progress>
+            </View>
+          ))}
         </View>
       )}
     </Card>
