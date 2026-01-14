@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { Link, useRouter } from 'expo-router'
+import { Text } from 'react-native'
 import { useAuth } from '~/hooks/use-auth-hook'
 import { Avatar, AvatarFallbackText } from './ui/avatar'
 import { Button } from './ui/button'
@@ -41,10 +42,12 @@ export function ProfileButton() {
 
       {/* Sair MenuItem */}
       <MenuItem textValue="sair">
-        <HStack space="sm" className="items-center">
-          <MaterialIcons name="logout" size={16} />
-          <MenuItemLabel onPress={handleSignOut}>Sair</MenuItemLabel>
-        </HStack>
+        <MenuItemLabel onPress={handleSignOut}>
+          <HStack space="sm" className="items-center">
+            <MaterialIcons name="logout" size={16} />
+            <Text>Sair</Text>
+          </HStack>
+        </MenuItemLabel>
       </MenuItem>
     </Menu>
   )

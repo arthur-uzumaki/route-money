@@ -7,6 +7,7 @@ import {
 import { type SignInRequest, useSignIn } from '~/http/sign-in'
 import { type SignUpRequest, useSignUp } from '~/http/sign-up'
 import { getToken, removeToken, saveToken } from '~/storage/token-storage'
+import { isTokenExpired } from '~/utils/is-token-expired'
 
 interface AuthState {
   isLoggedIn: boolean
@@ -57,9 +58,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
     async function loadToken() {
       const storedToken = await getToken()
 
-      console.log('Stored token:', storedToken)
+      if (!storedToken) {
+        setIsLoggedIn(false)
+        setIsReady(true)
+        return
+      }
 
-      setIsLoggedIn(!!storedToken)
+      if (isTokenExpired(storedToken)) {
+        await removeToken()
+        setIsLoggedIn(false)
+      } else {
+        setIsLoggedIn(true)
+      }
+
       setIsReady(true)
     }
 
